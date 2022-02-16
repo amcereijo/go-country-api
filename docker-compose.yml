@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-mysql
+    env_file: ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    restart: always
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+  go-country-api:
+    image: go-country-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - mysqldb
+    env_file: .env
+    ports:
+      - $PORT:$PORT
+    environment:
+
